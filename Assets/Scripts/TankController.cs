@@ -29,7 +29,7 @@ public class TankController : MonoBehaviour
     void GetPlayerInfo()
     {
         PlayerInfo playerInfo = null;
-        UIController.socket.On("tankPosition", response =>
+        UIController.socket.OnUnityThread("tankPosition", response =>
         {
             playerInfo = JsonConvert.DeserializeObject<PlayerInfo>(response.GetValue().ToString());
             
@@ -37,7 +37,7 @@ public class TankController : MonoBehaviour
             var positionY = playerInfo.pos_y;
             var rotationZ = playerInfo.rot_z;
         
-            int tankIndex = FindTankIndexById("Player0");
+            int tankIndex = FindTankIndexById(playerInfo.user_id);
             
             tanks.ElementAt(tankIndex).tank.transform.position = new Vector2(positionX, positionY);
             tanks.ElementAt(tankIndex).tank.transform.rotation = Quaternion.Euler(0,0,rotationZ);
@@ -55,5 +55,10 @@ public class TankController : MonoBehaviour
         }
         
         return -1;
+    }
+    
+    private void OnApplicationQuit()
+    {
+        UIController.socket.Emit("disconnected", ".");
     }
 }

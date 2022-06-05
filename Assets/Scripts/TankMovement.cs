@@ -46,7 +46,7 @@ public class TankMovement : MonoBehaviour
     void SendPositionData()
     {
         PlayerInfo playerInfo = new PlayerInfo();
-        playerInfo.user_id = "Player0";
+        playerInfo.user_id = UIController.socket.Id;
         playerInfo.pos_x = transform.position.x;
         playerInfo.pos_y = transform.position.y;
         playerInfo.rot_z = transform.eulerAngles.z;
